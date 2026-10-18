@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Verdant | Smart Irrigation Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+  <a class="brand" href="#"><span class="brand-mark">v</span> verdant<span class="brand-dot">.</span></a>
+  <div class="side-label">WORKSPACE</div>
+  <button class="nav active" data-view="dashboard"><span>▦</span> Overview</button>
+  <button class="nav" data-view="fields"><span>♧</span> Field management</button>
+  <button class="nav" data-view="lab"><span>⌘</span> Algorithm lab</button>
+  <button class="nav" data-view="compare"><span>⇄</span> Compare algorithms</button>
+  <button class="nav" data-view="reports"><span>▤</span> Reports & export</button>
+  <div class="sidebar-bottom"><div class="mini-icon">✳</div><b>Smart farming,</b><br><b>one drop at a time.</b><p>Academic simulation · v1.0</p><span class="live-dot"></span> Local simulation
+  </div>
+</aside>
+<main class="main">
+<header class="topbar"><div><div class="eyebrow">AGRICULTURE INTELLIGENCE / 01</div><h1 id="pageTitle">Smart irrigation<span>.</span></h1><p id="pageSub">Plan smarter. Allocate better. Waste less.</p></div><div class="top-actions"><span class="mode-pill"><i></i> Simulation mode</span><button class="btn btn-quiet" id="resetBtn">↺ Reset</button></div></header>
+<div id="alert" class="alert hidden"></div>
+
+<section class="view" id="view-dashboard">
+<div class="hero"><div><div class="hero-kicker">YOUR FARM AT A GLANCE</div><h2>Every drop has<br>a <em>purpose.</em></h2><p>Use algorithmic intelligence to make better water-allocation decisions across your fields.</p><button class="btn btn-lime" data-goto="lab">Run a simulation <span>↗</span></button></div><div class="hero-art"><div class="sun"></div><div class="hill hill-back"></div><div class="hill hill-front"></div><div class="plant plant-one">♧</div><div class="plant plant-two">♧</div><div class="water-mark">WATER<br><b>WISE</b></div></div></div>
+<div class="metric-grid">
+<div class="metric-card"><div class="metric-top">AVAILABLE WATER <span>◉</span></div><div class="metric-number"><span id="waterMetric">250</span><small> L</small></div><div class="metric-foot">Current planning budget</div></div>
+<div class="metric-card"><div class="metric-top">ACTIVE FIELDS <span>♧</span></div><div class="metric-number" id="fieldMetric">4</div><div class="metric-foot">Across your farm</div></div>
+<div class="metric-card"><div class="metric-top">TOTAL DEMAND <span>⌁</span></div><div class="metric-number"><span id="demandMetric">435</span><small> L</small></div><div class="metric-foot">Estimated for this cycle</div></div>
+<div class="metric-card highlight"><div class="metric-top">DP BENEFIT SCORE <span>✳</span></div><div class="metric-number" id="benefitMetric">—</div><div class="metric-foot">After optimization</div></div>
+</div>
+<div class="section-title"><div><h2>Field overview</h2><p>Review your field conditions and irrigation requirements.</p></div><button class="btn btn-outline" data-goto="fields">Manage fields ↗</button></div>
+<div class="panel table-panel"><div class="panel-head"><div><b>Field conditions</b><span>Sample data · editable in Field management</span></div><span class="tiny-badge">LIVE DATA</span></div><div class="table-scroll"><table><thead><tr><th>FIELD</th><th>CROP</th><th>MOISTURE</th><th>WATER DEMAND</th><th>PRIORITY</th></tr></thead><tbody id="overviewRows"></tbody></table></div></div>
+<div class="section-title"><div><h2>Allocation snapshot</h2><p>Compare how each strategy distributes water.</p></div></div>
+<div class="two-col"><div class="panel chart-panel"><div class="panel-head"><div><b>Water allocation</b><span>Litres allocated by algorithm</span></div></div><canvas id="overviewChart" height="210"></canvas><div id="chartEmpty" class="empty-state">Run a simulation to generate chart data.</div></div><div class="panel explain-card"><div class="explain-symbol">✳</div><div class="eyebrow">THE IDEA</div><h3>Fast decisions.<br><em>Better combinations.</em></h3><p><b>Greedy</b> chooses using a local priority rule. <b>Dynamic Programming</b> compares valid irrigation options to maximize total benefit within the water budget.</p><button class="text-link" data-goto="lab">Explore the algorithms ↗</button></div></div>
+</section>
+
+<section class="view hidden" id="view-fields">
+<div class="section-title"><div><h2>Field management</h2><p>Add, edit, or remove field data. All quantities use litres and hectares.</p></div><button class="btn btn-lime" id="addField">＋ Add field</button></div>
+<div class="panel"><div class="panel-head"><div><b>Your fields</b><span>Target moisture and crop demand define each irrigation cycle.</span></div><button class="btn btn-quiet" id="sampleBtn">Load sample data</button></div><div class="table-scroll"><table class="editable"><thead><tr><th>FIELD NAME</th><th>CROP</th><th>AREA (ha)</th><th>MOISTURE %</th><th>TARGET %</th><th>DEMAND (L)</th><th>PRIORITY 1–5</th><th>MAX (L)</th><th></th></tr></thead><tbody id="editRows"></tbody></table></div><div class="panel-foot">Priority score = moisture deficit × user priority ÷ 5. This is an educational scoring model.</div></div>
+<div class="panel budget-panel"><div><h3>Water budget</h3><p>Set the total water available for this irrigation cycle.</p></div><label>Total available water (L)<input id="budgetInput" type="number" min="0" value="250"></label><label>DP unit size (L)<select id="unitInput"><option value="1">1 L — precise, larger table</option><option value="5">5 L</option><option value="10" selected>10 L — recommended</option><option value="20">20 L — smaller table</option></select></label><button class="btn btn-lime" data-goto="lab">Continue to simulation ↗</button></div>
+</section>
+
+<section class="view hidden" id="view-lab">
+<div class="section-title"><div><h2>Algorithm lab</h2><p>Execute both algorithms on the same fields and water budget.</p></div><button class="btn btn-lime" id="runBtn">▶ Run both algorithms</button></div>
+<div class="setup-strip"><div><span>WATER BUDGET</span><b id="labBudget">250 L</b></div><div><span>FIELDS</span><b id="labFields">4</b></div><div><span>DP RESOLUTION</span><b id="labUnit">10 L</b></div><div><span>OBJECTIVE</span><b>Maximize benefit</b></div></div>
+<div class="two-col algorithm-cards"><div class="panel algorithm-card"><div class="algo-icon">↗</div><div class="eyebrow">STRATEGY 01</div><h3>Greedy algorithm</h3><p>Ranks fields by benefit per water unit, then chooses the best feasible option at each decision.</p><div class="algo-foot"><span class="pill pill-green">Heuristic</span><span>O(n log n)</span></div></div><div class="panel algorithm-card"><div class="algo-icon dp-icon">▦</div><div class="eyebrow">STRATEGY 02</div><h3>Dynamic programming</h3><p>Evaluates no, partial, and full irrigation options across discrete water-budget states.</p><div class="algo-foot"><span class="pill">Model-optimal</span><span>O(n × W × k)</span></div></div></div>
+<div id="results" class="hidden">
+<div class="section-title"><div><h2>Simulation results</h2><p>Allocation and benefit for the selected water budget.</p></div><span class="tiny-badge success">COMPLETED</span></div>
+<div class="metric-grid result-metrics"><div class="metric-card"><div class="metric-top">GREEDY BENEFIT</div><div class="metric-number" id="gBenefit">—</div><div class="metric-foot" id="gWater">—</div></div><div class="metric-card highlight"><div class="metric-top">DP BENEFIT</div><div class="metric-number" id="dBenefit">—</div><div class="metric-foot" id="dWater">—</div></div><div class="metric-card"><div class="metric-top">DP WATER LEFT</div><div class="metric-number" id="dLeft">—</div><div class="metric-foot">After allocation</div></div><div class="metric-card"><div class="metric-top">DP FIELDS SERVED</div><div class="metric-number" id="dServed">—</div><div class="metric-foot">Receiving partial or full irrigation</div></div></div>
+<div class="panel"><div class="panel-head"><div><b>Allocation schedule</b><span>Each field gets at most one irrigation option.</span></div></div><div class="table-scroll"><table><thead><tr><th>FIELD</th><th>GREEDY OPTION</th><th>GREEDY WATER</th><th>DP OPTION</th><th>DP WATER</th><th>DP BENEFIT</th></tr></thead><tbody id="resultRows"></tbody></table></div></div>
+<div class="two-col"><div class="panel chart-panel"><div class="panel-head"><div><b>Water used vs budget</b><span>Compare allocation totals</span></div></div><canvas id="resultChart" height="220"></canvas></div><div class="panel"><div class="panel-head"><div><b>What the results mean</b><span>Read before interpreting the score</span></div></div><div id="interpretation" class="interpretation"></div></div></div>
+</div>
+</section>
+
+<section class="view hidden" id="view-compare">
+<div class="section-title"><div><h2>Algorithm comparison</h2><p>Compare both strategies on identical inputs and constraints.</p></div><button class="btn btn-lime" id="compareRun">Refresh comparison ↗</button></div>
+<div class="panel"><div class="panel-head"><div><b>Performance comparison</b><span>Measured on this local run; timings vary by machine.</span></div></div><div class="table-scroll"><table><thead><tr><th>METRIC</th><th>GREEDY</th><th>DYNAMIC PROGRAMMING</th><th>INTERPRETATION</th></tr></thead><tbody id="compareRows"><tr><td colspan="4" class="empty-state">Run the algorithms first.</td></tr></tbody></table></div></div>
+<div class="two-col"><div class="panel"><div class="panel-head"><div><b>Complexity at a glance</b><span>n fields, W water units, k=3 options</span></div></div><div class="complexity-row"><span>Greedy time</span><code>O(n log n)</code></div><div class="complexity-row"><span>Greedy space</span><code>O(n)</code></div><div class="complexity-row"><span>DP time</span><code>O(n × W × k)</code></div><div class="complexity-row"><span>DP space</span><code>O(n × W)</code></div></div><div class="panel explain-card"><div class="eyebrow">FAIR COMPARISON</div><h3>Same input.<br><em>Same objective.</em></h3><p>Both algorithms use the same three choices per field and the same discretized water budget. Greedy is a heuristic; DP is optimal only for this defined model.</p></div></div>
+</section>
+
+<section class="view hidden" id="view-reports">
+<div class="section-title"><div><h2>Reports & export</h2><p>Export your latest results for your project report or viva.</p></div></div>
+<div class="two-col"><div class="panel report-card"><div class="report-icon">⇩</div><h3>Allocation report</h3><p>Download field-by-field decisions for both algorithms as a CSV spreadsheet.</p><button class="btn btn-lime" id="exportBtn">Export CSV ↗</button></div><div class="panel report-card"><div class="report-icon">⌘</div><h3>Print project summary</h3><p>Open the browser print dialog to save the current page as a PDF.</p><button class="btn btn-outline" id="printBtn">Print / Save PDF ↗</button></div></div
+</section>
+<footer>VERDANT · SMART IRRIGATION DSA PROJECT <span>Built for learning · No physical sensors connected</span></footer>
+</main>
+</div>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body></html>
