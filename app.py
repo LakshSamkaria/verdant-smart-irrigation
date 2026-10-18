@@ -8,13 +8,15 @@ import time
 
 app = Flask(__name__)
 app.config["JSON_SORT_KEYS"] = False
-
+    
 SAMPLE_FIELDS = [
-    {"id": 1, "name": "North Field", "crop": "Wheat", "area": 1.2, "moisture": 22, "target_moisture": 60, "demand": 120, "priority": 5, "max_allocation": 120},
-    {"id": 2, "name": "East Garden", "crop": "Tomato", "area": 0.6, "moisture": 35, "target_moisture": 65, "demand": 70, "priority": 4, "max_allocation": 70},
-    {"id": 3, "name": "South Plot", "crop": "Rice", "area": 1.5, "moisture": 48, "target_moisture": 75, "demand": 150, "priority": 5, "max_allocation": 150},
-    {"id": 4, "name": "West Field", "crop": "Cotton", "area": 1.0, "moisture": 28, "target_moisture": 60, "demand": 95, "priority": 3, "max_allocation": 95},
+    {"id": 1, "name": "Harman Ka Paani Mahal", "crop": "Wheat", "area": 1.2, "moisture": 22, "target_moisture": 60, "demand": 120, "priority": 5, "max_allocation": 120},
+    {"id": 2, "name": "Sahil Ka Green Empire", "crop": "Tomato", "area": 0.6, "moisture": 35, "target_moisture": 65, "demand": 70, "priority": 4, "max_allocation": 70},
+    {"id": 3, "name": "Sahil Thakur Ki Shahi Farming", "crop": "Rice", "area": 1.5, "moisture": 48, "target_moisture": 75, "demand": 150, "priority": 5, "max_allocation": 150},
+    {"id": 4, "name": "Saksham Ka Sukha Khet", "crop": "Cotton", "area": 1.0, "moisture": 28, "target_moisture": 60, "demand": 95, "priority": 3, "max_allocation": 95},
+    {"id": 5, "name": "Laksh Ka Luxury Khet", "crop": "Maize", "area": 0.8, "moisture": 30, "target_moisture": 65, "demand": 85, "priority": 4, "max_allocation": 85},
 ]
+
 
 @app.get("/")
 def index():
